@@ -5,6 +5,7 @@ npm i crypto-js --save
 npm i express --save
 npm i ws --save
 npm i elliptic --save
+npm i uuid --save
 
 
 
