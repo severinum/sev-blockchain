@@ -1,6 +1,5 @@
 const SHA256 = require ('crypto-js/sha256')
-const DIFICULTY = 4;
-
+const { DIFICULTY } = require('../config')
 
 class Block {
     
@@ -25,13 +24,14 @@ class Block {
         const lastHash = lastBlock.hash
         
         // Proof of Work part
+        console.log(`Searching for valid nonce ...  `)
         let nonce = 0
         do {
             nonce++ // noce is changing to generate new hash with DIFICILTY number of leading Zeros
             timestamp = Date.now()
             hash = Block.hash(timestamp, lastHash, data, nonce)
         } while(hash.substring(0, DIFICULTY) !== '0'.repeat(DIFICULTY)) // loop untill hash has DIFICILTY num. of leading '0' in hash
-        
+        console.log(`Found block nonce: ${nonce}`)
     
         return new this(timestamp, lastHash, hash, data, nonce)
     }
