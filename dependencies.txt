@@ -1,8 +1,10 @@
 npm i nodemon --save-dev
-npm i crypto-js --save   
 npm i jest --save-dev
+
+npm i crypto-js --save   
 npm i express --save
 npm i ws --save
+npm i elliptic --save
 
 
 
