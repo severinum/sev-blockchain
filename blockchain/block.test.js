@@ -28,4 +28,9 @@ describe ('Block', () => {
         .toEqual(block.dificulty -1)
     })
 
+    it('raises the dificulty for quickly mined blocks', () => {
+        expect(Block.adjustDificulty(block, block.timestamp+1))
+        .toEqual(block.dificulty + 1)
+    })
+
 });
