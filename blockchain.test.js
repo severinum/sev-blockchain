@@ -27,6 +27,7 @@ describe ('Blockchain', () => {
     });
 
     it('invalidates a chain with a corrupt genesis block', () => {
+        // shoul console log: invalid genesis block in isValidChain
         blockchain2.chain[0] = 'Bad Genesis Block'
         expect(blockchain.isValidChain(blockchain2.chain)).toBe(false)
     });
@@ -36,4 +37,21 @@ describe ('Blockchain', () => {
         blockchain2.chain[1].data = 'cats are not cool!'
         expect(blockchain.isValidChain(blockchain2.chain)).toBe(false)
     });
+
+
+    it('replaces chian if new chain is valid', () => {
+        blockchain2.addBlock('lazy snake')
+        
+        blockchain.replaceChain(blockchain2.chain)
+        // should also console log: Replacing blockchain with the new chain!
+        expect(blockchain.chain).toEqual(blockchain2.chain)
+    });
+
+    it('does not replaces chian with invalid new chain length [<=]', () => {
+        blockchain.addBlock('foo')
+        blockchain.replaceChain(blockchain2.chain)
+        // should also console log: Received chain is not longer than the current chain [consenus matter]
+        expect(blockchain.chain).not.toEqual(blockchain2.chain)
+    });
+
 });
