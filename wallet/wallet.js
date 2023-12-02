@@ -7,8 +7,7 @@ class Wallet {
     constructor(publicKeyString = null, privateKeyString = null) {
         this.balance = INITIAl_BALANCE
         if(publicKeyString === null && privateKeyString === null) {
-            this.keyPair = ChainUtils.genKeyPair(); // genetate pair of keys
-            
+            this.keyPair = ChainUtils.genKeyPair(); // genetate pair of keys as this is a new wallet
         } else {
             // case when user has wallet and wallet must be created from KeyPair
             this.keyPair = ChainUtils.createKeyPairFromStringKeys(publicKeyString, privateKeyString)

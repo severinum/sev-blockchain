@@ -1,4 +1,5 @@
 const ChainUtils = require('../chain-util')
+const { MINING_REWAR } = require('../config')
 
 class Transaction {
 
