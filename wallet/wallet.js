@@ -6,13 +6,13 @@ class Wallet {
 
     constructor(publicKeyString = null, privateKeyString = null) {
         this.balance = INITIAl_BALANCE
-        if(publicKeyString === null && privateKeyString === null) {
+        if (publicKeyString === null && privateKeyString === null) {
             this.keyPair = ChainUtils.genKeyPair(); // genetate pair of keys as this is a new wallet
         } else {
             // case when user has wallet and wallet must be created from KeyPair
             this.keyPair = ChainUtils.createKeyPairFromStringKeys(publicKeyString, privateKeyString)
             // TODO: if wallet exists , set the wallet balance by scanning all blockchain transactions
-            
+
         }
         this.publicKey = this.keyPair.getPublic().encode('hex'); // get the public kye but as hex   
     }
@@ -35,7 +35,10 @@ class Wallet {
         return this.keyPair.sign(dataHash)
     }
 
-    createTransaction(recipient, amount, transactionPool) {
+    createTransaction(recipient, amount, blockchain, transactionPool) {
+        
+        this.balance = this.claculateBalance(blockchain)
+
         if (amount > this.balance) {
             console.log(`Amount: ${amount} is too high for current wallet balance: ${this.balance}`)
             return
@@ -51,6 +54,39 @@ class Wallet {
         }
 
         return transaction
+    }
+
+    claculateBalance(blockchain) {
+        let balance = this.balance
+        let transactions = []
+        blockchain.chain.forEach(block => block.data.forEach(transaction => {
+            transactions.push(transaction)
+        }))
+
+        const walletInputTransactions =
+            transactions.filter(transaction => transaction.input.address === this.publicKey)
+
+        let startTime = 0
+
+        if (walletInputTransactions.length > 0) {
+            const recentInputTransactions = walletInputTransactions.reduce(
+                (prev, current) => prev.input.timestamp > current.input.timestamp ? prev : current
+            )
+            balance = recentInputTransactions.output.find(output => output.address === this.publicKey).amount
+            startTime = recentInputTransactions.input.timestamp
+        }
+
+        transactions.forEach(transaction => {
+            if(transaction.input.timestamp > startTime) {
+                transaction.output.find(output => {
+                    if(output.address === this.publicKey) {
+                        balance += output.amount
+                    }
+                })
+            }
+        })
+
+        return balance
     }
 
     static blockchainWallet() {

@@ -48,7 +48,10 @@ class Blockchain {
         console.log(`Searching for transaction with id: ${transactionId} `)
         const blockchainLength  = blockchain.chain.length
         console.log(blockchainLength)
-        
+        // TODO: find efficient way to find transactions
+        // Blockchain will be too long to do the regualr search
+        // maybe use db ???
+
     }
 
 }

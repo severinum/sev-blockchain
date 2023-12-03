@@ -40,7 +40,7 @@ app.get('/transaction', (req, res) => {
 
 app.post('/transaction', (req, res) => {
     const { recipient, amount } = req.body
-    const transaction = wallet.createTransaction(recipient, amount, tp)
+    const transaction = wallet.createTransaction(recipient, amount, blockchain, tp)
     p2pServer.broadcastTransaction(transaction)
     res.redirect('/transaction')
 })
@@ -53,8 +53,12 @@ app.get('/transaction/find/:transactionId', (req, res) => {
 }) 
 
 
-app.get('/public-key', (req, res) => {
+app.get('/wallet/public-key', (req, res) => {
     res.json({publicKey: wallet.publicKey})
+})
+
+app.get('/wallet/balance', (req, res) => {
+    res.json({publicKey: wallet.publicKey, balance: wallet.balance})
 })
 
 // Mine transactions pool valid transactions to blockchain an earns reward

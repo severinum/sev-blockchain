@@ -37,6 +37,8 @@ class Miner {
         // create a block consisting of the valid transactions
         const block = this.blockchain.addBlock(validTransactions);
 
+        this.wallet.balance = this.wallet.claculateBalance(this.blockchain)
+
         // sync. the chains in the p2p server
         this.p2pServer.syncChains()
 
