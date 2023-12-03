@@ -31,17 +31,40 @@ class Blockchain {
     }
 
     replaceChain(newChain) {
+        console.log(`Started chain replacement process at: ${Date.now()}`)
         // check if new chain is longer (longer is a valid chain [our consesus])
         if(newChain.length <= this.chain.length) {
             console.log('Received chain is not longer than the current chain [consenus matter]')
+            console.log(`Finished chain replacement process at: ${Date.now()}`)
             return
         } else if (!this.isValidChain(newChain)) {
             console.log('Received chain is not valid')
+            console.log(`Finished chain replacement process at: ${Date.now()}`)
             return
         }
+
+        // Original chain last block hash must be equal to new candidate chain length-1 block hash
+        if(newChain[newChain.length - 2].hash != this.chain[this.chain.length -1].hash) {
+            console.log('FAIL!!!: Block is invalid. Last block hash in chain is not equal to new chain block hash')
+            return
+        } else {
+            console.log('OK. Chains hashes are correct')
+        }
+
+        // Original chain last block blockNumberInChain must be equal to new candidate chain length-1 block blockNumberInChain
+        if(newChain[newChain.length - 2].blockNumberInChain != this.chain[this.chain.length -1].blockNumberInChain) {
+            console.log('FAIL!!! : Block is invalid. Last block number in chain is not equal to new chain block number')
+            return
+        } else {
+            console.log('OK. Chains block numbers are correct')
+        }
         
-        console.log('Replacing blockchain with the new chain!')
-        this.chain = newChain;
+        // Find place where blocks have same length
+        // Attach missing blocks 
+        const differenceInChainLengths = newChain.length - this.chain.length
+        console.log(`Replacing chain strats at: ${Date.now()}`)
+        this.chain.push(newChain[this.chain.length]) // updating chain
+        console.log(`Finished chain replacement process at: ${Date.now()}`)
     }
 
     static findTransaction(blockchain, transactionId) {

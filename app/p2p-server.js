@@ -47,12 +47,15 @@ class P2PServer {
             const data = JSON.parse(message)
             switch (data.type) {
                 case MESSAGE_TYPES.chain:
+                    console.log(`Received broadcasted message: sync chain`)
                     this.blockchain.replaceChain(data.chain)
                     break;
                 case MESSAGE_TYPES.transaction:
+                    console.log(`Received broadcasted message: sync pool transactions`)
                     this.transactionPool.updateOrAddTransaction(data.transaction)
                     break;
                 case MESSAGE_TYPES.clearTransactions:
+                    console.log(`Received broadcasted message: clear transaction pool`)
                     this.transactionPool.clear();
                     break;
             }
@@ -75,6 +78,7 @@ class P2PServer {
     }
 
     syncChains() {
+        console.log(`Broadcasting sync chain to all nodes.`)
         this.sockets.forEach(socket => {
             this.sendChain(socket)
         })
@@ -88,12 +92,14 @@ class P2PServer {
 
 
     broadcastTransaction(transaction) {
+        console.log(`Broadcasting transaction to all nodes.`)
         this.sockets.forEach(socket => {
             this.sendTransaction(socket, transaction)
         })
     }
 
     broadcastClearPoolTransactions() {
+        console.log(`Broadcasting transaction pool clear to all nodes`)
         this.sockets.forEach(socket => {
             this.clearPoolTransactions(socket)
         })
