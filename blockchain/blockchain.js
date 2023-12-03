@@ -44,6 +44,13 @@ class Blockchain {
         this.chain = newChain;
     }
 
+    static findTransaction(blockchain, transactionId) {
+        console.log(`Searching for transaction with id: ${transactionId} `)
+        const blockchainLength  = blockchain.chain.length
+        console.log(blockchainLength)
+        
+    }
+
 }
 
 module.exports = Blockchain

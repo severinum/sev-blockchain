@@ -53,5 +53,11 @@ class Wallet {
         return transaction
     }
 
+    static blockchainWallet() {
+        const blockchainWallet = new this()
+        blockchainWallet.address = 'sev-blockchain-wallet'
+        return blockchainWallet
+    }
+
 }
 module.exports = Wallet
