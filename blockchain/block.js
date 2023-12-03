@@ -1,15 +1,17 @@
-const SHA256 = require ('crypto-js/sha256')
+const ChainUtils = require("../chain-util")
 const { DIFICULTY, MINE_RATE } = require('../config')
 
 class Block {
     
-    constructor(timestamp, lastHash, hash, data, nonce, dificulty) {
+    constructor(timestamp, lastHash, hash, data, nonce, dificulty, blockNumberInChain) {
         this.timestamp = timestamp
         this.lastHash = lastHash
         this.hash = hash
         this.data = data
         this.nonce = nonce;
         this.dificulty = dificulty || DIFICULTY
+
+        this.blockNumberInChain = blockNumberInChain || 1
     }
 
     static genesis() {
@@ -38,12 +40,14 @@ class Block {
             hash = Block.hash(timestamp, lastHash, data, nonce, dificulty)
         } while(hash.substring(0, dificulty) !== '0'.repeat(dificulty)) // loop untill hash has DIFICILTY num. of leading '0' in hash
         console.log(`Found block nonce: ${nonce}`)
+
+        let thisBlockNumberInChain = lastBlock.blockNumberInChain + 1
     
-        return new this(timestamp, lastHash, hash, data, nonce, dificulty)
+        return new this(timestamp, lastHash, hash, data, nonce, dificulty,thisBlockNumberInChain)
     }
 
     static hash(timestamp, lastHash, data, nonce, dificulty) {
-        return SHA256(`${timestamp}${lastHash}${data}${nonce}${dificulty}`).toString()
+        return ChainUtils.hash(`${timestamp}${lastHash}${data}${nonce}${dificulty}`).toString()
     }
 
     static blockHash(block) {
