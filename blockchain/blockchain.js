@@ -53,6 +53,7 @@ class Blockchain {
             for( let i= this.chain.length; i<newChain.length; i++) {
                 this.chain.push(newChain[i])
             }
+            console.log(`Chain synchronised`)
             console.log(`newChain length=${newChain.length}, chain lenghth=${this.chain.length}`)
             return
         } else {
