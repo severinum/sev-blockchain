@@ -121,8 +121,6 @@ class Wallet {
             transactions.push(transaction)
         }))
 
-        console.log(transactions);
-
         const walletInputTransactions =
             transactions.filter(transaction => transaction.input.address === walletAddress)
 

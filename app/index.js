@@ -44,6 +44,20 @@ app.get('/transaction', (req, res) => {
     res.json(tp.transactions)
 })
 
+
+/**
+ *
+ * 
+ *  If sent `sender_pub` and `sender_priv` It will set this wallet as a sender wallet. If those 2 are not available, it will set
+ *  node wallet as sender wallet. 
+{
+    "sender_pub": "041ff135ccbd5f0181a411a2dbaa21cd06d23e6565e003d4c1f6d2a66e735c1cd2ddd358023a17d5efbc0b0496906531abe9fac70a5179246695dc40edb8e8b6ef",
+    "sender_priv": "315cd1fcb23e8f89aa7438d62537469c05e592bf3c174ccb35ff9a26220a34fa",
+    "recipient": "04fa71fa391fe21bb81b9a169f567cc8ee2f8b19bd74275854382b3b2a9c717c35d0c7888a71a5d3f54c9b6be63b8e54615e8b2b259df413ef93e170564e71653b",
+    "amount": 45
+}
+ */
+
 app.post('/transaction', (req, res) => {
     const { recipient, amount, sender_pub, sender_priv } = req.body
     let transaction = null
