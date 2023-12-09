@@ -81,11 +81,23 @@ class Blockchain {
         blockchain.chain.forEach(block => block.data.forEach(transaction => {
             if(transaction.id === transactionId) {
                 foundTransaction = transaction
+                foundTransaction.blockHash = block.hash
+                foundTransaction.blocktimestamp = block.timestamp
+                foundTransaction.blockNumberInChain = block.blockNumberInChain
             }        
         }))
-
         return foundTransaction
+    }
 
+    static getTransactionConfirmations(blockchain, transactionId) {
+        const findTransaction = Blockchain.findTransaction(blockchain, transactionId)
+        if(!findTransaction) {
+            return 0;
+        }
+        const foundTransactionBlockNumber = findTransaction.blockNumberInChain
+        const latestBlockNumber = blockchain.chain[blockchain.chain.length - 1].blockNumberInChain
+
+        return latestBlockNumber - foundTransactionBlockNumber
     }
 
 }

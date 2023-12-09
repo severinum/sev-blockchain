@@ -36,6 +36,11 @@ app.get('/blockchain/transaction/:transactionId', (req, res) => {
     res.status(200).send(foundTransaction)
 }) 
 
+app.get('/blockchain/transaction/confirmation/:transactionId', (req, res) => {
+    const transactionId = req.params.transactionId
+    const foundTransactionConfirmations = Blockchain.getTransactionConfirmations(blockchain, transactionId)
+    res.status(200).send({confirmations: foundTransactionConfirmations})
+}) 
 
 /* ============= TRANSACTION ROUTES ============ */
 
