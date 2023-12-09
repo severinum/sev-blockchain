@@ -49,6 +49,11 @@ class Blockchain {
             // TODO: In case if new blockchain node is created/joned , its chain has length is 1 (genesis block only)
             // or node was inactive (connection issue). Then its chain length may be different. 
             console.log('New node or inactive node rejoining chain')
+           
+            for( let i= this.chain.length; i<newChain.length; i++) {
+                this.chain.push(newChain[i])
+            }
+            console.log(`newChain length=${newChain.length}, chain lenghth=${this.chain.length}`)
             return
         } else {
             console.log('OK. Chains hashes are correct')

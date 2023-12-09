@@ -99,6 +99,10 @@ app.post('/node/mine-transactions', (req, res) => {
     res.status(response.code).send(response)
 })
 
+app.get('/node/healthcheck', (req, res) => {
+    res.status(200).send("OK")
+})
+
 /* ============= WALLET ROUTES ============ */
 
 app.get('/wallet/balance/:walletAddress', (req, res) => {
