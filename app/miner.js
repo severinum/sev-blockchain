@@ -13,9 +13,6 @@ class Miner {
     }
 
     mine(force = false) {
-
-        
-
         const validTransactions = this.transactionPool.validTransactions()
         if (validTransactions.length == 0) {
             let errorMsg = `Won't mine. Zero transactions in pool`
