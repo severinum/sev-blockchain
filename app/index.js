@@ -40,7 +40,7 @@ app.post('/mine', (req, res) => {
 })
 
 
-app.get('/transaction', (req, res) => {
+app.get('/pool/transaction', (req, res) => {
     res.json(tp.transactions)
 })
 
@@ -58,7 +58,7 @@ app.get('/transaction', (req, res) => {
 }
  */
 
-app.post('/transaction', (req, res) => {
+app.post('/pool/transaction', (req, res) => {
     const { recipient, amount, sender_pub, sender_priv } = req.body
     let transaction = null
     if(sender_pub && sender_priv) {
@@ -75,11 +75,11 @@ app.post('/transaction', (req, res) => {
         res.status(400).send(`Can't create transaction`)
     } else {
         p2pServer.broadcastTransaction(transaction)
-        res.redirect('/transaction')
+        res.status(200).send(transaction)
     }  
 })
 
-app.get('/transaction/find/:transactionId', (req, res) => {
+app.get('/pool/transaction/find/:transactionId', (req, res) => {
     const transactionId = req.params.transactionId
     const foundTransaction = Blockchain.findTransaction(blockchain, transactionId)
 
