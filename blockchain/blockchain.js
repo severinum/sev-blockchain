@@ -73,10 +73,18 @@ class Blockchain {
     static findTransaction(blockchain, transactionId) {
         console.log(`Searching for transaction with id: ${transactionId} `)
         const blockchainLength  = blockchain.chain.length
-        console.log(blockchainLength)
         // TODO: find efficient way to find transactions
         // Blockchain will be too long to do the regualr search
         // maybe use db ???
+        let foundTransaction = null
+        
+        blockchain.chain.forEach(block => block.data.forEach(transaction => {
+            if(transaction.id === transactionId) {
+                foundTransaction = transaction
+            }        
+        }))
+
+        return foundTransaction
 
     }
 
