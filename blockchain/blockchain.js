@@ -29,6 +29,10 @@ class Blockchain {
 
             if(block.hash !== Block.blockHash(block)) {
                 console.log(`block.hash !== Block.blockHash(block) ---- doesn't match !`);
+                console.log(`--------------------------`)
+                console.log(`a: ${block.hash}`);
+                console.log(`b: ${Block.blockHash(block)}`);
+                console.log(`--------------------------`)
             }
 
             if(block.lastHash !== lastBlock.hash || block.hash !== Block.blockHash(block) ){
