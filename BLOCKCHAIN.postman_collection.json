@@ -11,92 +11,6 @@
 			"name": "TestNodes",
 			"item": [
 				{
-					"name": "Wallet",
-					"item": [
-						{
-							"name": "Create Wallet",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "http://{{HOST}}:{{PORT}}/wallet/create",
-									"protocol": "http",
-									"host": [
-										"{{HOST}}"
-									],
-									"port": "{{PORT}}",
-									"path": [
-										"wallet",
-										"create"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Get Node Wallet Public Key Copy",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "http://{{HOST}}:{{PORT}}/wallet/public-key",
-									"protocol": "http",
-									"host": [
-										"{{HOST}}"
-									],
-									"port": "{{PORT}}",
-									"path": [
-										"wallet",
-										"public-key"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Get Node Wallet Balance",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "http://{{HOST}}:{{PORT}}/wallet/balance",
-									"protocol": "http",
-									"host": [
-										"{{HOST}}"
-									],
-									"port": "{{PORT}}",
-									"path": [
-										"wallet",
-										"balance"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Get wallet balance",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "http://{{HOST}}:{{PORT}}/wallet/balance/04c5da810407f18ca7f5598815d9b7bcd9a1ef9e748c2ec84511eba2e9d45a726a709906992dafc6ce246128721f8d9c2562937270a6381de592968b6280c0641a",
-									"protocol": "http",
-									"host": [
-										"{{HOST}}"
-									],
-									"port": "{{PORT}}",
-									"path": [
-										"wallet",
-										"balance",
-										"04c5da810407f18ca7f5598815d9b7bcd9a1ef9e748c2ec84511eba2e9d45a726a709906992dafc6ce246128721f8d9c2562937270a6381de592968b6280c0641a"
-									]
-								}
-							},
-							"response": []
-						}
-					]
-				},
-				{
 					"name": "Get Blocks - TEST NODE 1",
 					"request": {
 						"method": "GET",
@@ -287,194 +201,252 @@
 			]
 		},
 		{
-			"name": "Get Blocks",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "http://{{HOST}}:{{PORT}}/blocks",
-					"protocol": "http",
-					"host": [
-						"{{HOST}}"
-					],
-					"port": "{{PORT}}",
-					"path": [
-						"blocks"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Get pool transactions",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "http://{{HOST}}:{{PORT}}/transaction",
-					"protocol": "http",
-					"host": [
-						"{{HOST}}"
-					],
-					"port": "{{PORT}}",
-					"path": [
-						"transaction"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Find transaction",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "http://{{HOST}}:{{PORT}}/transaction/find/abc",
-					"protocol": "http",
-					"host": [
-						"{{HOST}}"
-					],
-					"port": "{{PORT}}",
-					"path": [
-						"transaction",
-						"find",
-						"abc"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Add transaction to pool",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"recipient\": \"foo-4rd-12abcd1efa\",\n    \"amount\": 100\n}",
-					"options": {
-						"raw": {
-							"language": "json"
+			"name": "Wallet",
+			"item": [
+				{
+					"name": "Create Wallet",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{HOST}}:{{PORT}}/wallet/create",
+							"protocol": "http",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"wallet",
+								"create"
+							]
 						}
-					}
+					},
+					"response": []
 				},
-				"url": {
-					"raw": "http://{{HOST}}:{{PORT}}/transaction",
-					"protocol": "http",
-					"host": [
-						"{{HOST}}"
-					],
-					"port": "{{PORT}}",
-					"path": [
-						"transaction"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Add transaction  between 2 Wallets",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"sender\": \"046de5f8de532fd60a4e3d4acc9e75bb002634182558d34ac169c874af72d49c164c0f40874653d02add9ce0c2a567a7d6db1187c191e197c5d1e40013be2055fd\",\n    \"recipient\": \"04fa71fa391fe21bb81b9a169f567cc8ee2f8b19bd74275854382b3b2a9c717c35d0c7888a71a5d3f54c9b6be63b8e54615e8b2b259df413ef93e170564e71653b\",\n    \"amount\": 45\n}",
-					"options": {
-						"raw": {
-							"language": "json"
+				{
+					"name": "Get wallet balance",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{HOST}}:{{PORT}}/wallet/balance/044d5c1dbad48583e96abbdd8194bdbfb236e58b498bdbcefc6d32723c5fa43a0100405f69bcc0846e14d49a34568ff2645041a2b663daaa3770d6d4b204db951c",
+							"protocol": "http",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"wallet",
+								"balance",
+								"044d5c1dbad48583e96abbdd8194bdbfb236e58b498bdbcefc6d32723c5fa43a0100405f69bcc0846e14d49a34568ff2645041a2b663daaa3770d6d4b204db951c"
+							]
 						}
-					}
-				},
-				"url": {
-					"raw": "http://{{HOST}}:{{PORT}}/transaction",
-					"protocol": "http",
-					"host": [
-						"{{HOST}}"
-					],
-					"port": "{{PORT}}",
-					"path": [
-						"transaction"
-					]
+					},
+					"response": []
 				}
-			},
-			"response": []
+			]
 		},
 		{
-			"name": "Mine poll transactions to blockchain",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "",
-					"options": {
-						"raw": {
-							"language": "json"
+			"name": "Blockchain",
+			"item": [
+				{
+					"name": "Find transaction",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{HOST}}:{{PORT}}/blockchain/transaction/59d83ef4-63f0-444d-af50-870cca2930e2",
+							"protocol": "http",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"blockchain",
+								"transaction",
+								"59d83ef4-63f0-444d-af50-870cca2930e2"
+							]
 						}
-					}
+					},
+					"response": []
 				},
-				"url": {
-					"raw": "http://{{HOST}}:{{PORT}}/mine-transactions",
-					"protocol": "http",
-					"host": [
-						"{{HOST}}"
-					],
-					"port": "{{PORT}}",
-					"path": [
-						"mine-transactions"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Mine block. -unused enpoint",
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n}",
-					"options": {
-						"raw": {
-							"language": "json"
+				{
+					"name": "Get Blocks",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{HOST}}:{{PORT}}/blockchain/blocks",
+							"protocol": "http",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"blockchain",
+								"blocks"
+							]
 						}
-					}
-				},
-				"url": {
-					"raw": "http://{{HOST}}:3001/mine",
-					"protocol": "http",
-					"host": [
-						"{{HOST}}"
-					],
-					"port": "3001",
-					"path": [
-						"mine"
-					]
+					},
+					"response": []
 				}
-			},
-			"response": []
+			]
 		},
 		{
-			"name": "Other Host Pool check",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "http://{{HOST}}:3001/transaction",
-					"protocol": "http",
-					"host": [
-						"{{HOST}}"
-					],
-					"port": "3001",
-					"path": [
-						"transaction"
-					]
+			"name": "Transaction",
+			"item": [
+				{
+					"name": "Get pool transactions",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{HOST}}:{{PORT}}/transaction",
+							"protocol": "http",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"transaction"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add transaction to pool",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"recipient\": \"foo-4rd-12abcd1efa\",\n    \"amount\": 100\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://{{HOST}}:{{PORT}}/transaction",
+							"protocol": "http",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"transaction"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add transaction  between 2 Wallets",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"sender_pub\": \"041ff135ccbd5f0181a411a2dbaa21cd06d23e6565e003d4c1f6d2a66e735c1cd2ddd358023a17d5efbc0b0496906531abe9fac70a5179246695dc40edb8e8b6ef\",\n    \"sender_priv\": \"315cd1fcb23e8f89aa7438d62537469c05e592bf3c174ccb35ff9a26220a34fa\",\n    \"recipient\": \"04fa71fa391fe21bb81b9a169f567cc8ee2f8b19bd74275854382b3b2a9c717c35d0c7888a71a5d3f54c9b6be63b8e54615e8b2b259df413ef93e170564e71653b\",\n    \"amount\": 45\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://{{HOST}}:{{PORT}}/transaction",
+							"protocol": "http",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"transaction"
+							]
+						}
+					},
+					"response": []
 				}
-			},
-			"response": []
+			]
+		},
+		{
+			"name": "Node",
+			"item": [
+				{
+					"name": "Get Node Wallet Balance",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{HOST}}:{{PORT}}/node/wallet/balance",
+							"protocol": "http",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"node",
+								"wallet",
+								"balance"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Node Wallet Public Key",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://{{HOST}}:{{PORT}}/node/wallet/public-key",
+							"protocol": "http",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"node",
+								"wallet",
+								"public-key"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Mine poll transactions to blockchain",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://{{HOST}}:{{PORT}}/node/mine-transactions",
+							"protocol": "http",
+							"host": [
+								"{{HOST}}"
+							],
+							"port": "{{PORT}}",
+							"path": [
+								"node",
+								"mine-transactions"
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		}
 	]
 }

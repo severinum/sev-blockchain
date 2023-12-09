@@ -4,19 +4,16 @@ const P2PServer = require ('./p2p-server')
 const bodyParser = require('body-parser')
 const dotenv = require('dotenv')
 require('dotenv/config')
-
 const Wallet = require('../wallet/wallet')
 const TractionPool = require('../wallet/transaction-pool')
 const Miner = require('./miner')
-const ResponseMessage = require('./ResponseMessage')
-const Block = require('../blockchain/block')
 const { INITIAl_BALANCE } = require('../config')
-
 const HTTP_PORT = process.env.HTTP_PORT || 3001
 
 const app = express()
 app.use(bodyParser.json())
 
+/* Perform basic inits for the Node */
 const blockchain = new Blockchain()
 const wallet = new Wallet(process.env.BLOCKCHAIN_WALLET_PUB, process.env.BLOCKCHAIN_WALLET_PRIV)
 wallet.setBalance(100000000)
@@ -26,28 +23,28 @@ const p2pServer = new P2PServer(blockchain, tp);
 const miner = new Miner(blockchain, tp, wallet, p2pServer)
 
 
-app.get('/blocks', (req, res) => {
+/* ============= BLOCKCHAIN ROUTES ============ */
+
+app.get('/blockchain/blocks', (req, res) => {
     res.json(blockchain.chain)
 })
 
-app.post('/mine', (req, res) => {
-    const block = blockchain.addBlock()
-    console.log(`New block added ${block.toString()}`)
+app.get('/blockchain/transaction/:transactionId', (req, res) => {
+    const transactionId = req.params.transactionId
+    const foundTransaction = Blockchain.findTransaction(blockchain, transactionId)
 
-    p2pServer.syncChains();
-
-    res.redirect('/blocks')
-})
+    res.status(200).send(foundTransaction)
+}) 
 
 
-app.get('/pool/transaction', (req, res) => {
+/* ============= TRANSACTION ROUTES ============ */
+
+app.get('/transaction', (req, res) => {
     res.json(tp.transactions)
 })
 
-
 /**
- *
- * 
+ *  Example request json body.
  *  If sent `sender_pub` and `sender_priv` It will set this wallet as a sender wallet. If those 2 are not available, it will set
  *  node wallet as sender wallet. 
 {
@@ -58,7 +55,7 @@ app.get('/pool/transaction', (req, res) => {
 }
  */
 
-app.post('/pool/transaction', (req, res) => {
+app.post('/transaction', (req, res) => {
     const { recipient, amount, sender_pub, sender_priv } = req.body
     let transaction = null
     if(sender_pub && sender_priv) {
@@ -79,24 +76,26 @@ app.post('/pool/transaction', (req, res) => {
     }  
 })
 
-app.get('/pool/transaction/find/:transactionId', (req, res) => {
-    const transactionId = req.params.transactionId
-    const foundTransaction = Blockchain.findTransaction(blockchain, transactionId)
 
-    res.status(200).send(foundTransaction)
-}) 
+/* ============= NODE ROUTES ============ */
 
-
-app.get('/wallet/public-key', (req, res) => {
+app.get('/node/wallet/public-key', (req, res) => {
     res.json({publicKey: wallet.publicKey})
 })
 
-// Node wallet balance
-app.get('/wallet/balance', (req, res) => {
+app.get('/node/wallet/balance', (req, res) => {
     res.json({publicKey: wallet.publicKey, balance: wallet.balance})
 })
 
-// Custom wallet balance
+// Mine transactions pool valid transactions to blockchain an earns reward
+app.post('/node/mine-transactions', (req, res) => {
+    const response = miner.mine();
+    
+    res.status(response.code).send(response)
+})
+
+/* ============= WALLET ROUTES ============ */
+
 app.get('/wallet/balance/:walletAddress', (req, res) => {
     const walletAddress = req.params.walletAddress
     console.log(`Find balance for wallet: ${walletAddress}`)
@@ -123,13 +122,6 @@ app.get('/wallet/create', (req, res) => {
     })
 })
 
-
-// Mine transactions pool valid transactions to blockchain an earns reward
-app.post('/mine-transactions', (req, res) => {
-    const response = miner.mine();
-    
-    res.status(response.code).send(response)
-})
 
 app.listen(HTTP_PORT, () => console.log(`listening on port ${HTTP_PORT}`))
 p2pServer.listen(); // start web socket server
