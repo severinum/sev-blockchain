@@ -23,6 +23,14 @@ class Blockchain {
             const block = chain[i]
             const lastBlock = chain[i-1]
 
+            if(block.lastHash !== lastBlock.hash) {
+                console.log(`block.lastHash !== lastBlock.hash ----- hashes doesn't match !`)
+            }
+
+            if(block.hash !== Block.blockHash(block)) {
+                console.log(`block.hash !== Block.blockHash(block) ---- doesn't match !`);
+            }
+
             if(block.lastHash !== lastBlock.hash || block.hash !== Block.blockHash(block) ){
                 return false
             }
