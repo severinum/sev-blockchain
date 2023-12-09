@@ -40,7 +40,7 @@ describe ('Transaction', () => {
     describe('transaction with amount higher than wallet balance', () => {
         
         beforeEach(() => {
-            amount = 50000
+            amount = 50000000000
             transaction = Transaction.newTransaction(wallet, recipient, amount)
         })
 
