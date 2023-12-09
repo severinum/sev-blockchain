@@ -46,7 +46,7 @@ describe('Wallet', () => {
 
         beforeEach(() => {
             senderWallet = new Wallet();
-            addBalance = 100;
+            addBalance = 10;
             repeatAdd = 3;
             for(let i=0; i<repeatAdd; i++) {
                 senderWallet.createTransaction(wallet.publicKey, addBalance, blockchain, tp)

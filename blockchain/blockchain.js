@@ -46,6 +46,9 @@ class Blockchain {
         // Original chain last block hash must be equal to new candidate chain length-1 block hash
         if(newChain[newChain.length - 2].hash != this.chain[this.chain.length -1].hash) {
             console.log('FAIL!!!: Block is invalid. Last block hash in chain is not equal to new chain block hash')
+            // TODO: In case if new blockchain node is created/joned , its chain has length is 1 (genesis block only)
+            // or node was inactive (connection issue). Then its chain length may be different. 
+            console.log('New node or inactive node rejoining chain')
             return
         } else {
             console.log('OK. Chains hashes are correct')
