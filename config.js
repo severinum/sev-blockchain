@@ -12,8 +12,8 @@ const PROFILE = process.env.PROFILE || 'prod'
 const APP_IP = ip.address()
 const P2P_PORT = process.env.P2P_PORT || 5001
 
-const CURRENT_SERVER = `http://${APP_IP}:${HTTP_PORT}`
-const CURRENT_WEBSOCKET = `ws://${APP_IP}:${P2P_PORT}`
+const CURRENT_SERVER =   process.env.SERVER_IP || `http://${APP_IP}:${HTTP_PORT}`
+const CURRENT_WEBSOCKET =  process.env.WEBSOCKET_ADDRESS || `ws://${APP_IP}:${P2P_PORT}`
 
 // Seed servers for selected profiles
 let SEED_SERVERS = {
@@ -23,7 +23,8 @@ let SEED_SERVERS = {
         'http://localhost:3050'
     ],
     "prod": [
-
+        `http://13.40.42.210:3030`,
+        'http://13.40.4.5:3030'
     ]
 }
 

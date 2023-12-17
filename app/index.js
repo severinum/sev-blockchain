@@ -13,6 +13,7 @@ const PROFILE = process.env.PROFILE || 'prod'
 const Wallet = require('../wallet/wallet')
 const TractionPool = require('../wallet/transaction-pool')
 const Miner = require('./miner')
+const { log, LogsColours } = require('../colours')
 
 const app = express()
 app.use(bodyParser.json())
