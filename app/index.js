@@ -163,3 +163,8 @@ registerWithSeedServer(PROFILE)
 * Start web socket server (Connection between SBC nodes)
 */
 p2pServer.listen(); 
+
+process.on('uncaughtException', function (err) {
+    log("ERROR: uncaughtException", LogsColours.BgRed)
+    console.log(err);
+  }); 
