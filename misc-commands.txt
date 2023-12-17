@@ -1,0 +1,8 @@
+
+
+sudo docker ps
+sudo docker container stop 
+sudo docker container rm
+
+sudo docker images -a
+sudo docker image rm 
