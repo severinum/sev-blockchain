@@ -1,14 +1,18 @@
 const express = require('express')
 const Blockchain = require('../blockchain/blockchain')
-const P2PServer = require ('./p2p-server')
+const P2PServer = require('./p2p-server')
 const bodyParser = require('body-parser')
 const dotenv = require('dotenv')
 require('dotenv/config')
+const { INITIAl_BALANCE, SEED_SERVERS, CURRENT_WEBSOCKET } = require('../config')
+const fetch = require('cross-fetch')
+
+const HTTP_PORT = process.env.HTTP_PORT || 3001
+const PROFILE = process.env.PROFILE || 'prod'
+
 const Wallet = require('../wallet/wallet')
 const TractionPool = require('../wallet/transaction-pool')
 const Miner = require('./miner')
-const { INITIAl_BALANCE } = require('../config')
-const HTTP_PORT = process.env.HTTP_PORT || 3001
 
 const app = express()
 app.use(bodyParser.json())
@@ -34,13 +38,13 @@ app.get('/blockchain/transaction/:transactionId', (req, res) => {
     const foundTransaction = Blockchain.findTransaction(blockchain, transactionId)
 
     res.status(200).send(foundTransaction)
-}) 
+})
 
 app.get('/blockchain/transaction/confirmation/:transactionId', (req, res) => {
     const transactionId = req.params.transactionId
     const foundTransactionConfirmations = Blockchain.getTransactionConfirmations(blockchain, transactionId)
-    res.status(200).send({confirmations: foundTransactionConfirmations})
-}) 
+    res.status(200).send({ confirmations: foundTransactionConfirmations })
+})
 
 /* ============= TRANSACTION ROUTES ============ */
 
@@ -63,7 +67,7 @@ app.get('/transaction', (req, res) => {
 app.post('/transaction', (req, res) => {
     const { recipient, amount, sender_pub, sender_priv } = req.body
     let transaction = null
-    if(sender_pub && sender_priv) {
+    if (sender_pub && sender_priv) {
         console.log(`Sender address is set`);
         const senderWallet = new Wallet(sender_pub, sender_priv)
         transaction = wallet.createTransaction(recipient, amount, blockchain, tp, senderWallet)
@@ -72,30 +76,30 @@ app.post('/transaction', (req, res) => {
         transaction = wallet.createTransaction(recipient, amount, blockchain, tp)
     }
 
-    if(!transaction) {
+    if (!transaction) {
         console.log(`Can't create transaction`);
         res.status(400).send(`Can't create transaction`)
     } else {
         p2pServer.broadcastTransaction(transaction)
         res.status(200).send(transaction)
-    }  
+    }
 })
 
 
 /* ============= NODE ROUTES ============ */
 
 app.get('/node/wallet/public-key', (req, res) => {
-    res.json({publicKey: wallet.publicKey})
+    res.json({ publicKey: wallet.publicKey })
 })
 
 app.get('/node/wallet/balance', (req, res) => {
-    res.json({publicKey: wallet.publicKey, balance: wallet.balance})
+    res.json({ publicKey: wallet.publicKey, balance: wallet.balance })
 })
 
 // Mine transactions pool valid transactions to blockchain an earns reward
 app.post('/node/mine-transactions', (req, res) => {
     const response = miner.mine();
-    
+
     res.status(response.code).send(response)
 })
 
@@ -110,7 +114,7 @@ app.get('/wallet/balance/:walletAddress', (req, res) => {
     console.log(`Find balance for wallet: ${walletAddress}`)
     const searchWalletBalance = Wallet.getBalance(blockchain, walletAddress)
     console.log(`Found balance for wallet: ${searchWalletBalance}`);
-    res.json({publicKey: wallet.publicKey, balance: searchWalletBalance})
+    res.json({ publicKey: wallet.publicKey, balance: searchWalletBalance })
 })
 
 app.get('/wallet/create', (req, res) => {
@@ -133,4 +137,29 @@ app.get('/wallet/create', (req, res) => {
 
 
 app.listen(HTTP_PORT, () => console.log(`listening on port ${HTTP_PORT}`))
-p2pServer.listen(); // start web socket server
+
+/**
+ * Register with Seed Servers
+ */
+function registerWithSeedServer(profile) {
+    const selectedSeedServer = selectRandomSeedServer(profile)
+    console.log(`selected seed server to register with : ${selectedSeedServer}`);
+    if (selectedSeedServer != undefined) {
+        fetch(`${selectedSeedServer}/blockchainnode/register?node=${CURRENT_WEBSOCKET}`, {
+            method: "POST"
+        }).then((response) => response.json())
+        return;
+    }
+    console.log("ERROR: Don't have seed servers list for profile: " + PROFILE);
+}
+
+function selectRandomSeedServer(profile) {
+    return SEED_SERVERS[profile][Math.floor(Math.random() * SEED_SERVERS[profile].length)]
+}
+
+registerWithSeedServer(PROFILE)
+
+/*
+* Start web socket server (Connection between SBC nodes)
+*/
+p2pServer.listen(); 
