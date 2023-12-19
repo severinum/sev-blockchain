@@ -19,8 +19,7 @@ const CURRENT_WEBSOCKET =  process.env.WEBSOCKET_ADDRESS || `ws://${APP_IP}:${P2
 let SEED_SERVERS = {
     "dev": [
         'http://localhost:3030',
-        'http://localhost:3040',
-        'http://localhost:3050'
+        'http://localhost:3040'
     ],
     "prod": [
         `http://13.40.42.210:3030`,
