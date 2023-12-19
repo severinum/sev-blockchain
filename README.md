@@ -3,6 +3,19 @@ Demo blockchain in JS
 
 ## Run nodes locally
 
+#### With Seed Servers running
+
+Each node will connect with randomly selected Seed Server (check `config.js` SEED_SERVERS). Seed server will broadcast
+node registration to all other known seed servers. All known seed servers should have node in their register. 
+
+local node 1 `PROFILE=dev npm run dev`
+
+local node 2 `PROFILE=dev HTTP_PORT=3002 P2P_PORT=5002 npm run dev`
+
+local node 3 `PROFILE=dev HTTP_PORT=3003 P2P_PORT=5003 npm run dev`
+
+#### Without Seed Servers
+
 Below commands include list of Peers as param. This should be removed when Seed Nodes are introduced.
 
 local node 1 `PROFILE=dev npm run dev`
