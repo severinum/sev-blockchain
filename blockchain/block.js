@@ -1,4 +1,4 @@
-const ChainUtils = require("../chain-util")
+const ChainUtils = require("../utils/chain-util")
 const { DIFICULTY, MINE_RATE } = require('../config')
 
 class Block {

@@ -1,8 +1,10 @@
 // P2P Server
 const Websocket = require('ws')
-const { P2P_PORT } = require('../config')
+const { P2P_PORT, PEERS_REGISTRY } = require('../config')
+const { log } = require('../utils/colours')
+const PeersRegistry = require('./PeersRegistry')
 
-const peers = process.env.PEERS ? process.env.PEERS.split(',') : []
+const peers = process.env.PEERS ? process.env.PEERS.split(',') : PEERS_REGISTRY.getPeers()
 
 const MESSAGE_TYPES = {
     chain: 'CHAIN',
@@ -25,7 +27,7 @@ class P2PServer {
 
         this.connectToPeers();
 
-        console.log(`Listening for p2p connection on: ${P2P_PORT}`)
+        log(`Listening for p2p connection on: ${P2P_PORT}`)
     }
 
     connectSocket(socket) {
