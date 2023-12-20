@@ -1,5 +1,6 @@
 const { INITIAl_BALANCE } = require('../config')
 const ChainUtils = require('../utils/chain-util');
+const { log } = require('../utils/colours');
 const Transaction = require('./transaction');
 
 class Wallet {
@@ -50,13 +51,16 @@ class Wallet {
         }
 
         // check if sender transaction exists in the pool already
-        let transaction = transactionPool.existingTransaction(this.publicKey)
-        if (transaction) {
-            transaction.update(this, recipient, amount)
-        } else {
-            transaction = Transaction.newTransaction(this, recipient, amount)
+        // let transaction = transactionPool.existingTransaction(this.publicKey)
+        // if (transaction) {
+        //     transaction.update(this, recipient, amount)
+        // } else {
+        //     transaction = Transaction.newTransaction(this, recipient, amount)
+        //     transactionPool.updateOrAddTransaction(transaction)
+        // }
+
+        let transaction = Transaction.newTransaction(this, recipient, amount)
             transactionPool.updateOrAddTransaction(transaction)
-        }
         
         if(sender !== null) {
             const senderWalletBalance = Wallet.getBalance(blockchain, sender.publicKey)
