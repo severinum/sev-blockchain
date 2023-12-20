@@ -4,8 +4,8 @@ const dotenv = require('dotenv')
 require('dotenv/config')
 const fetch = require('cross-fetch')
 
-const { INITIAl_BALANCE, SEED_SERVERS, CURRENT_WEBSOCKET, 
-    PEERS_REGISTRY, PROFILE, HTTP_PORT, CURRENT_SERVER} = require('../config')
+const { INITIAl_BALANCE, SEED_SERVERS, CURRENT_WEBSOCKET,
+    PEERS_REGISTRY, PROFILE, HTTP_PORT, CURRENT_SERVER } = require('../config')
 
 const Blockchain = require('../blockchain/blockchain')
 const P2PServer = require('./p2p-server')
@@ -16,6 +16,7 @@ const Miner = require('./miner')
 const { log, LogsColours } = require('../utils/colours')
 const { registerWithSeedServer } = require('../utils/utils')
 const { cronejob_get_peers_lists_from_seed_servers } = require('../utils/crone-jobs')
+const Transaction = require('../wallet/transaction')
 
 const app = express()
 app.use(bodyParser.json())
@@ -79,18 +80,20 @@ app.post('/transaction', (req, res) => {
         transaction = wallet.createTransaction(recipient, amount, blockchain, tp)
     }
 
-    if (!transaction) {
+    if (!(transaction instanceof Transaction)) {
         console.log(`Can't create transaction`);
-        return res.status(400).send(`Can't create transaction`)
-    } else {
-        p2pServer.broadcastTransaction(transaction)
-        const response = miner.mine(true) // force automine transaction
-        res.status(200).send({
-            "message": response.message,
-            "transaction": transaction
+        return res.status(400).send({
+            "message": transaction
         })
     }
-    
+
+    p2pServer.broadcastTransaction(transaction)
+    const response = miner.mine(true) // force automine transaction
+    res.status(200).send({
+        "message": response.message,
+        "transaction": transaction
+    })
+
 })
 
 
@@ -160,8 +163,8 @@ cronejob_get_peers_lists_from_seed_servers()
 /*
 * Start web socket server (Connection between SBC nodes)
 */
-setTimeout(()=> {
-    p2pServer.listen(); 
+setTimeout(() => {
+    p2pServer.listen();
 }, 1000)
 
 process.on('uncaughtException', function (err) {

@@ -60,26 +60,38 @@ class Wallet {
             sender.balance = Wallet.getBalance(blockchain, sender.publicKey)
             const senderWalletBalance = sender.balance
             if (amount > senderWalletBalance) {
-                console.log(`Amount: ${amount} is too high for current wallet balance: ${senderWalletBalance}`)
-                return
+                log(`Amount: ${amount} is too high for current wallet balance: ${senderWalletBalance}`)
+                return 'insufficient funds'
             }
 
             transaction = transactionPool.existingTransaction(sender.publicKey)
             if (transaction) {
                 transaction.update(sender, recipient, amount)
+                if (!Transaction.verifyTransaction(transaction)) {
+                    log(`NOT VERIFIED: ${transaction.id}`, LogsColours.BgRed)
+                    return 'not verified'
+                }
             } else {
                 transaction = Transaction.newTransaction(sender, recipient, amount)
+                if (!Transaction.verifyTransaction(transaction)) {
+                    log(`NOT VERIFIED: ${transaction.id} `, LogsColours.BgRed)
+                    return 'not verified'
+                }
                 transactionPool.updateOrAddTransaction(transaction)
             }
         } else {
             this.balance = this.claculateBalance(blockchain, this.publicKey)
 
             if (amount > this.balance) {
-                console.log(`Amount: ${amount} is too high for current wallet balance: ${this.balance}`)
-                return
+                log(`Amount: ${amount} is too high for current wallet balance: ${this.balance}`)
+                return 'insufficient funds'
             }
             // Each block will have jsut 1 transaction.
             transaction = Transaction.newTransaction(this, recipient, amount)
+            if (!Transaction.verifyTransaction(transaction)) {
+                log(`NOT VERIFIED: ${transaction.id}`, LogsColours.BgRed)
+                return 'not verified'
+            }
             transactionPool.updateOrAddTransaction(transaction)
         }
 
