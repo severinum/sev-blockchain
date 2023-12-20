@@ -36,7 +36,6 @@ function selectRandomSeedServer() {
 }
 
 function getPeerListFromAllKnownSeedServers() {
-    log(`Get peer list from all known seed servers and update own list`)
     SEED_SERVERS[PROFILE].forEach(seedServer => {
         fetch(`${seedServer}/seedserver/bcnodes`, {
             method: "GET"
@@ -45,10 +44,11 @@ function getPeerListFromAllKnownSeedServers() {
             return response.json()
         })
         .then(res => {
-            log(`List of received peers form server ${seedServer} :: ${res}`)
             PEERS_REGISTRY.addPeersAsList(res)
         })
-
+        .catch(error => {
+            log(`ERROR: ${error}`)
+        })
     })
 }
 

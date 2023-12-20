@@ -71,21 +71,26 @@ app.post('/transaction', (req, res) => {
     const { recipient, amount, sender_pub, sender_priv } = req.body
     let transaction = null
     if (sender_pub && sender_priv) {
-        console.log(`Sender address is set`);
+        //console.log(`Sender address is set`);
         const senderWallet = new Wallet(sender_pub, sender_priv)
         transaction = wallet.createTransaction(recipient, amount, blockchain, tp, senderWallet)
     } else {
-        console.log(`Sender adddress unset.`);
+        //console.log(`Sender adddress unset.`);
         transaction = wallet.createTransaction(recipient, amount, blockchain, tp)
     }
 
     if (!transaction) {
         console.log(`Can't create transaction`);
-        res.status(400).send(`Can't create transaction`)
+        return res.status(400).send(`Can't create transaction`)
     } else {
         p2pServer.broadcastTransaction(transaction)
-        res.status(200).send(transaction)
+        const response = miner.mine(true) // force automine transaction
+        res.status(200).send({
+            "message": response.message,
+            "transaction": transaction
+        })
     }
+    
 })
 
 
