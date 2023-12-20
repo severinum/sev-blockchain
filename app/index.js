@@ -1,19 +1,21 @@
 const express = require('express')
-const Blockchain = require('../blockchain/blockchain')
-const P2PServer = require('./p2p-server')
 const bodyParser = require('body-parser')
 const dotenv = require('dotenv')
 require('dotenv/config')
-const { INITIAl_BALANCE, SEED_SERVERS, CURRENT_WEBSOCKET } = require('../config')
 const fetch = require('cross-fetch')
 
-const HTTP_PORT = process.env.HTTP_PORT || 3001
-const PROFILE = process.env.PROFILE || 'prod'
+const { INITIAl_BALANCE, SEED_SERVERS, CURRENT_WEBSOCKET, 
+    PEERS_REGISTRY, PROFILE, HTTP_PORT, CURRENT_SERVER} = require('../config')
 
+const Blockchain = require('../blockchain/blockchain')
+const P2PServer = require('./p2p-server')
+const PeersRegistry = require('./PeersRegistry')
 const Wallet = require('../wallet/wallet')
 const TractionPool = require('../wallet/transaction-pool')
 const Miner = require('./miner')
-const { log, LogsColours } = require('../colours')
+const { log, LogsColours } = require('../utils/colours')
+const { registerWithSeedServer } = require('../utils/utils')
+const { cronejob_get_peers_lists_from_seed_servers } = require('../utils/crone-jobs')
 
 const app = express()
 app.use(bodyParser.json())
@@ -108,6 +110,11 @@ app.get('/node/healthcheck', (req, res) => {
     res.status(200).send("OK")
 })
 
+app.get('/node/registerednodes', (req, res) => {
+    res.status(200).send(PEERS_REGISTRY.getPeers())
+})
+
+
 /* ============= WALLET ROUTES ============ */
 
 app.get('/wallet/balance/:walletAddress', (req, res) => {
@@ -137,35 +144,22 @@ app.get('/wallet/create', (req, res) => {
 })
 
 
-app.listen(HTTP_PORT, () => console.log(`listening on port ${HTTP_PORT}`))
+app.listen(HTTP_PORT, () => log(`listening on port ${HTTP_PORT}`))
 
-/**
- * Register with Seed Servers
- */
-function registerWithSeedServer(profile) {
-    const selectedSeedServer = selectRandomSeedServer(profile)
-    console.log(`selected seed server to register with : ${selectedSeedServer}`);
-    if (selectedSeedServer != undefined) {
-        fetch(`${selectedSeedServer}/blockchainnode/register?node=${CURRENT_WEBSOCKET}`, {
-            method: "POST"
-        }).then((response) => response.json())
-        return;
-    }
-    console.log("ERROR: Don't have seed servers list for profile: " + PROFILE);
-}
+log(`This server: ${CURRENT_SERVER}`, LogsColours.BgWhite)
+log(`Selected profile: ${PROFILE}`)
 
-function selectRandomSeedServer(profile) {
-    return SEED_SERVERS[profile][Math.floor(Math.random() * SEED_SERVERS[profile].length)]
-}
-
-registerWithSeedServer(PROFILE)
+registerWithSeedServer()
+cronejob_get_peers_lists_from_seed_servers()
 
 /*
 * Start web socket server (Connection between SBC nodes)
 */
-p2pServer.listen(); 
+setTimeout(()=> {
+    p2pServer.listen(); 
+}, 1000)
 
 process.on('uncaughtException', function (err) {
     log("ERROR: uncaughtException", LogsColours.BgRed)
     console.log(err);
-  }); 
+}); 
