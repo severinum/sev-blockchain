@@ -50,6 +50,30 @@ app.get('/blockchain/transaction/confirmation/:transactionId', (req, res) => {
     res.status(200).send({ confirmations: foundTransactionConfirmations })
 })
 
+app.post('/blockchain/tofile', (req, res) => {
+    let fileName = `sevchain-backup-${Date.now()}.json`;
+    var fs = require('fs');
+    fs.writeFile(`backups/${fileName}`, JSON.stringify(blockchain), 'utf8', () => {
+
+    });
+    res.status(200).send({ message: `saved to file ${fileName}` })
+})
+
+// app.get('/blockchain/fromfile', (req, res) => {
+//     let fileName = 'sevchain-backup.json';
+
+//     fs.readFile(`backups/${fileName}`, 'utf8', function readFileCallback(err, data) {
+//         if (err) {
+//             console.log(err);
+//         } else {
+//             blockchain = JSON.parse(data); //now it an object
+//         }
+//     });
+
+//     res.status(200).send({ message: `saved to file ${fileName}` })
+// })
+
+
 /* ============= TRANSACTION ROUTES ============ */
 
 app.get('/transaction', (req, res) => {

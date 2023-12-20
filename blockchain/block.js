@@ -1,5 +1,5 @@
 const ChainUtils = require("../utils/chain-util")
-const { DIFICULTY, MINE_RATE } = require('../config')
+const { DIFICULTY, MINE_RATE, PROFILE } = require('../config')
 
 class Block {
     
@@ -68,7 +68,8 @@ class Block {
     static adjustDificulty(lastBlock, currentTime) {
         let { dificulty } = lastBlock
         dificulty = lastBlock.timestamp + MINE_RATE > currentTime ? dificulty + 1 : dificulty - 1
-        return dificulty
+        
+        return PROFILE === 'dev' ? 1 :  dificulty
     }
 }
 
