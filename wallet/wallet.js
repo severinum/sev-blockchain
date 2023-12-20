@@ -1,6 +1,6 @@
 const { INITIAl_BALANCE } = require('../config')
 const ChainUtils = require('../utils/chain-util');
-const { log } = require('../utils/colours');
+const { log, LogsColours } = require('../utils/colours');
 const Transaction = require('./transaction');
 
 class Wallet {
@@ -42,14 +42,9 @@ class Wallet {
     }
 
     createTransaction(recipient, amount, blockchain, transactionPool, sender = null) {
-     
-        this.balance = this.claculateBalance(blockchain)
-
-        if (amount > this.balance) {
-            console.log(`Amount: ${amount} is too high for current wallet balance: ${this.balance}`)
-            return
-        }
-
+        // BELOW CLODE WAS USED TO ADD TRANSACTIONS TO POOL, but it was conflict when
+        // different nodes wanted to add its transaction to the same, not mined pool
+        //
         // check if sender transaction exists in the pool already
         // let transaction = transactionPool.existingTransaction(this.publicKey)
         // if (transaction) {
@@ -59,25 +54,35 @@ class Wallet {
         //     transactionPool.updateOrAddTransaction(transaction)
         // }
 
-        let transaction = Transaction.newTransaction(this, recipient, amount)
-            transactionPool.updateOrAddTransaction(transaction)
-        
-        if(sender !== null) {
-            const senderWalletBalance = Wallet.getBalance(blockchain, sender.publicKey)
-            if(amount > senderWalletBalance) {
+        let transaction = null
+
+        if (sender !== null) {
+            sender.balance = Wallet.getBalance(blockchain, sender.publicKey)
+            const senderWalletBalance = sender.balance
+            if (amount > senderWalletBalance) {
                 console.log(`Amount: ${amount} is too high for current wallet balance: ${senderWalletBalance}`)
                 return
             }
 
-            let transaction = transactionPool.existingTransaction(sender.publicKey)
+            transaction = transactionPool.existingTransaction(sender.publicKey)
             if (transaction) {
                 transaction.update(sender, recipient, amount)
             } else {
                 transaction = Transaction.newTransaction(sender, recipient, amount)
                 transactionPool.updateOrAddTransaction(transaction)
             }
+        } else {
+            this.balance = this.claculateBalance(blockchain, this.publicKey)
+
+            if (amount > this.balance) {
+                console.log(`Amount: ${amount} is too high for current wallet balance: ${this.balance}`)
+                return
+            }
+            // Each block will have jsut 1 transaction.
+            transaction = Transaction.newTransaction(this, recipient, amount)
+            transactionPool.updateOrAddTransaction(transaction)
         }
- 
+
         return transaction
     }
 
@@ -127,6 +132,12 @@ class Wallet {
 
         const walletInputTransactions =
             transactions.filter(transaction => transaction.input.address === walletAddress)
+
+        const walletOutputTransactions =
+            transactions.filter(transaction => {
+                transactions.filter(transaction => transaction.input.address === walletAddress)
+                return transaction.output.filter(t => t.address === walletAddress)
+            })
 
         let startTime = 0
 
