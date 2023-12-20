@@ -1,5 +1,6 @@
 const ChainUtils = require('../utils/chain-util')
 const { MINING_REWARD } = require('../config')
+const { log, LogsColours } = require('../utils/colours')
 
 class Transaction {
 
@@ -35,12 +36,10 @@ class Transaction {
     }
 
     static newTransaction(senderWallet, recipient, amount) {
-        
         if(amount > senderWallet.balance) {
             console.log(`Amount: ${amount} bigger than a wallet balance!`)
             return
         }
-
         return Transaction.transactionWithOutputs(senderWallet,[
             { amount: senderWallet.balance - amount, address: senderWallet.publicKey },
             { amount, address: recipient}
